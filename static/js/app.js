@@ -1,5 +1,13 @@
 // VoiceFraudShield AI Main Frontend Application Logic
 
+// Auto-resolve API and WebSocket targets for Netlify vs Render vs Local
+const isNetlify = window.location.hostname.includes("netlify.app");
+const RENDER_BACKEND_HOST = "voice-fraudshield-ai.onrender.com";
+const API_BASE = isNetlify ? `https://${RENDER_BACKEND_HOST}` : "";
+const WS_BASE = isNetlify 
+    ? `wss://${RENDER_BACKEND_HOST}` 
+    : `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}`;
+
 let audioContext = null;
 let mediaStream = null;
 let audioProcessor = null;
@@ -77,7 +85,7 @@ function switchInputSubTab(subTabName) {
 // Attack Simulator Lab Loader
 async function loadSimulatorScenarios() {
     try {
-        const res = await fetch('/api/v1/simulator/scenarios');
+        const res = await fetch(`${API_BASE}/api/v1/simulator/scenarios`);
         const data = await res.json();
 
         const container = document.getElementById('sim-scenarios-container');
@@ -105,7 +113,7 @@ async function loadSimulatorScenarios() {
 
 async function runSimulatorScenario(scenarioId) {
     try {
-        const res = await fetch(`/api/v1/simulator/run/${scenarioId}`, { method: 'POST' });
+        const res = await fetch(`${API_BASE}/api/v1/simulator/run/${scenarioId}`, { method: 'POST' });
         const data = await res.json();
 
         const scen = data.scenario_info;
@@ -126,7 +134,7 @@ async function runSimulatorScenario(scenarioId) {
         // Play scenario audio
         if (scen && scen.sample_file) {
             const sampleName = scen.sample_file.split('/').pop().replace('.wav','');
-            const audio = new Audio(`/api/v1/samples/${sampleName}/audio`);
+            const audio = new Audio(`${API_BASE}/api/v1/samples/${sampleName}/audio`);
             audio.play().catch(e => console.log("Audio autoplay prevented"));
         }
     } catch (err) {
@@ -137,7 +145,7 @@ async function runSimulatorScenario(scenarioId) {
 // Step-Up Verification Trigger
 async function triggerStepUp(method) {
     try {
-        const res = await fetch('/api/v1/verification/request', {
+        const res = await fetch(`${API_BASE}/api/v1/verification/request`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -250,8 +258,7 @@ async function startMicStream() {
         const source = audioContext.createMediaStreamSource(mediaStream);
         audioProcessor = audioContext.createScriptProcessor(2048, 1, 1);
 
-        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsUrl = `${wsProtocol}//${window.location.host}/ws/stream-detect`;
+        const wsUrl = `${WS_BASE}/ws/stream-detect`;
         websocket = new WebSocket(wsUrl);
 
         websocket.onopen = () => {
@@ -337,7 +344,7 @@ let cachedSamples = [];
 // Sample Suite Loader & Analyzer
 async function loadSampleSuite() {
     try {
-        const res = await fetch('/api/v1/samples');
+        const res = await fetch(`${API_BASE}/api/v1/samples`);
         const data = await res.json();
         cachedSamples = data.samples || [];
         const container = document.getElementById('sample-cards-container');
@@ -379,7 +386,7 @@ async function analyzeSample(sampleId) {
             document.getElementById('transcript-input').value = sampleMeta.transcript;
         }
 
-        const audioRes = await fetch(`/api/v1/samples/${sampleId}/audio`);
+        const audioRes = await fetch(`${API_BASE}/api/v1/samples/${sampleId}/audio`);
         const blob = await audioRes.blob();
 
         const reader = new FileReader();
@@ -395,7 +402,7 @@ async function analyzeSample(sampleId) {
                 voip_proxy_detected: document.getElementById('voip-proxy-select') ? (document.getElementById('voip-proxy-select').value === "true") : false
             };
 
-            const analyzeRes = await fetch('/api/v1/analyze-base64', {
+            const analyzeRes = await fetch(`${API_BASE}/api/v1/analyze-base64`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -439,7 +446,7 @@ async function handleFileUpload(event) {
     formData.append('cli_number', document.getElementById('cli-number-input') ? document.getElementById('cli-number-input').value : '+1-800-555-0199');
 
     try {
-        const res = await fetch('/api/v1/analyze', { method: 'POST', body: formData });
+        const res = await fetch(`${API_BASE}/api/v1/analyze`, { method: 'POST', body: formData });
         if (!res.ok) {
             const errData = await res.json().catch(() => ({}));
             throw new Error(errData.detail || `Server returned HTTP ${res.status}`);
@@ -676,7 +683,7 @@ async function executeFreezeTransaction() {
             reason: "AI Voice Cloning Impersonation Attack Intercepted by VoiceFraudShield"
         };
 
-        const res = await fetch('/api/v1/banking/transactions/freeze', {
+        const res = await fetch(`${API_BASE}/api/v1/banking/transactions/freeze`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
