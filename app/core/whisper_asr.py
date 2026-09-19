@@ -9,27 +9,29 @@ class WhisperASREngine:
     """
     Real-Time Multilingual Speech-to-Text (ASR) Engine powered by OpenAI Whisper.
     Supports 99+ languages including Hindi, Marathi, Bengali, Tamil, English, etc.
+    Memory-optimized for cloud micro-containers (512MB RAM).
     """
 
-    def __init__(self, model_size: str = "base"):
+    def __init__(self, model_size: str = "tiny"):
         self.model_size = model_size
         self.model = None
-        self._load_model()
 
     def _load_model(self):
+        if self.model is not None:
+            return
         try:
+            import gc
+            import torch
+            torch.set_num_threads(1)
             ssl._create_default_https_context = ssl._create_unverified_context
             import whisper
-            logger.info(f"Loading Whisper model '{self.model_size}'...")
-            self.model = whisper.load_model(self.model_size)
+            logger.info(f"Loading lightweight Whisper model '{self.model_size}'...")
+            self.model = whisper.load_model(self.model_size, device="cpu")
+            gc.collect()
             logger.info(f"Whisper '{self.model_size}' loaded successfully!")
         except Exception as e:
             logger.error(f"Failed to load Whisper model: {e}")
-            try:
-                import whisper
-                self.model = whisper.load_model("tiny")
-            except Exception:
-                self.model = None
+            self.model = None
 
     def transcribe_audio(self, audio_np: np.ndarray, sample_rate: int = 16000, language: str = None) -> dict:
         """
