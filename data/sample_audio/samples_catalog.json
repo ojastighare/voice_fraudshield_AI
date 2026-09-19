@@ -1,0 +1,50 @@
+[
+  {
+    "id": "sample_genuine_ceo_english",
+    "title": "Rajesh Sharma (CEO) - Genuine Call",
+    "language": "Indian English",
+    "type": "GENUINE",
+    "speaker": "Rajesh Sharma (CEO)",
+    "claimed_speaker_id": "spk_ceo_rajesh",
+    "transcript": "Hi, this is Rajesh. Please review the quarterly operational report when you get a chance.",
+    "transaction_amount": 50000.0,
+    "file_path": "data/sample_audio/sample_genuine_ceo_english.wav",
+    "description": "Authentic caller speech with natural prosody, vocal fold micro-jitter, and formants."
+  },
+  {
+    "id": "sample_cloned_ceo_impersonation",
+    "title": "AI Deep Clone - CEO Fund Transfer Attack",
+    "language": "Indian English",
+    "type": "SYNTHETIC_CLONE",
+    "speaker": "Impersonating CEO (Rajesh Sharma)",
+    "claimed_speaker_id": "spk_ceo_rajesh",
+    "transcript": "Hi, I'm the CEO. I'm at the airport. I need you to transfer 30 lakh rupees immediately to this new beneficiary account right now. Do not call me back.",
+    "transaction_amount": 3000000.0,
+    "file_path": "data/sample_audio/sample_cloned_ceo_impersonation.wav",
+    "description": "AI-cloned voice executing wire transfer attack. Exhibits high-frequency vocoder phase artifacts and pitch jump."
+  },
+  {
+    "id": "sample_genuine_cfo_hindi",
+    "title": "Ananya Sen (CFO) - Genuine Hindi Call",
+    "language": "Hindi / Hinglish",
+    "type": "GENUINE",
+    "speaker": "Ananya Sen (CFO)",
+    "claimed_speaker_id": "spk_cfo_ananya",
+    "transcript": "Namaste, Ananya yahan. Budget approval documents mail kar diye hain, please check karein.",
+    "transaction_amount": 100000.0,
+    "file_path": "data/sample_audio/sample_genuine_cfo_hindi.wav",
+    "description": "Genuine female executive voice with natural pitch dynamics in Hindi context."
+  },
+  {
+    "id": "sample_cloned_cfo_otp_attack",
+    "title": "AI Voice Clone - CFO Hindi OTP Social Engineering",
+    "language": "Hindi",
+    "type": "SYNTHETIC_CLONE",
+    "speaker": "Impersonating CFO (Ananya Sen)",
+    "claimed_speaker_id": "spk_cfo_ananya",
+    "transcript": "Ananya bol rahi hoon. Mujhe urgently OTP chahiye corporate payment server access ke liye, turant share karo.",
+    "transaction_amount": 2500000.0,
+    "file_path": "data/sample_audio/sample_cloned_cfo_otp_attack.wav",
+    "description": "Manipulated synthetic voice attempting urgent OTP verification override and unauthorized funds transfer."
+  }
+]

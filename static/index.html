@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceFraudShield AI | Voice Impersonation & Banking Fraud Defense Layer</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="app-layout">
+        <!-- Top Application Header -->
+        <header class="app-header">
+            <div class="logo-group">
+                <div class="shield-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <div class="logo-text">
+                    <div class="brand-title">VOICE FRAUD SHIELD <span class="badge-ai">AI</span></div>
+                    <div class="brand-sub">Multi-Layer Voice Cloning & Transaction Fraud Defense System</div>
+                </div>
+            </div>
+
+            <!-- Top Telemetry Badges -->
+            <div class="header-badges">
+                <div class="status-chip">
+                    <span class="pulse-dot active"></span>
+                    <span class="chip-label">ENGINE:</span>
+                    <span class="chip-val text-green">4-LAYER DEFENSE ACTIVE</span>
+                </div>
+                <div class="status-chip">
+                    <i class="fa-solid fa-tower-cell text-blue"></i>
+                    <span class="chip-label">NETWORK GATE:</span>
+                    <span class="chip-val text-blue">PRE-CALL INTERCEPTOR</span>
+                </div>
+                <div class="status-chip">
+                    <i class="fa-solid fa-building-columns text-amber"></i>
+                    <span class="chip-label">BANKING API:</span>
+                    <span class="chip-val text-amber">SUB-50ms CBS FREEZE</span>
+                </div>
+                <div class="status-chip">
+                    <i class="fa-solid fa-lock text-green"></i>
+                    <span class="chip-label">DPDP PRIVACY:</span>
+                    <span class="chip-val text-green">ZERO RETENTION</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Feature Navigation Menu Bar -->
+        <nav class="feature-nav-bar">
+            <button class="nav-tab-btn active" onclick="switchMainView('command')">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Command Center</span>
+            </button>
+            <button class="nav-tab-btn" onclick="switchMainView('network')">
+                <i class="fa-solid fa-tower-cell"></i>
+                <span>Layer 0 Network Gate</span>
+            </button>
+            <button class="nav-tab-btn" onclick="switchMainView('simulator')">
+                <i class="fa-solid fa-flask-vial"></i>
+                <span>Attack Simulator Lab</span>
+            </button>
+            <button class="nav-tab-btn" onclick="switchMainView('banking')">
+                <i class="fa-solid fa-building-columns"></i>
+                <span>Core Banking Gateway</span>
+            </button>
+            <button class="nav-tab-btn" onclick="switchMainView('forensics')">
+                <i class="fa-solid fa-brain"></i>
+                <span>Deep Forensics & Biometrics</span>
+            </button>
+            <button class="nav-tab-btn" onclick="switchMainView('audit')">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span>Audit & Security Logs</span>
+            </button>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-viewport">
+
+            <!-- ========================================================================= -->
+            <!-- VIEW 1: COMMAND CENTER (Live Defense Overview & Call Monitor) -->
+            <!-- ========================================================================= -->
+            <section id="view-command" class="view-panel active">
+                <!-- Top Row: Risk Gauge & Intelligence Signals -->
+                <div class="view-grid grid-2-col">
+                    <!-- Left: Real-time Risk Fusion Gauge & Explainability -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-gauge-high"></i> Real-Time Risk Fusion Index</h2>
+                            <span id="risk-status-badge" class="risk-badge green">GREEN / SAFE</span>
+                        </div>
+
+                        <!-- Gauge Display (No Overlapping) -->
+                        <div class="gauge-container">
+                            <div class="circular-meter">
+                                <svg class="meter-svg" viewBox="0 0 120 70">
+                                    <path class="meter-bg" d="M 15 60 A 45 45 0 0 1 105 60"></path>
+                                    <path id="meter-fill" class="meter-fill green" d="M 15 60 A 45 45 0 0 1 105 60" stroke-dasharray="141.4" stroke-dashoffset="141.4"></path>
+                                </svg>
+                                <div class="meter-val-group">
+                                    <span id="risk-score-num" class="score-number">0.0</span>
+                                    <span class="score-max">/ 100</span>
+                                </div>
+                            </div>
+                            <div id="risk-verdict-title" class="verdict-title text-green">Genuine Voice & Identity Verified</div>
+                            <p id="risk-verdict-desc" class="verdict-desc">Continuous multi-layer intelligence telemetry active.</p>
+                        </div>
+
+                        <!-- Explainable AI Reasons -->
+                        <div class="explainability-box">
+                            <h3><i class="fa-solid fa-circle-question"></i> Explainable AI: Why was this call flagged?</h3>
+                            <ul id="explainability-reasons-list" class="explain-list">
+                                <li><i class="fa-solid fa-check text-green"></i> System standby. No threat anomalies detected.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right: Multi-Layer Intelligence Signals & Action Controls -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-layer-group"></i> Multi-Layer Intelligence Signals</h2>
+                            <span class="panel-badge">LAYER 0 - 3</span>
+                        </div>
+
+                        <div class="metric-bar-group">
+                            <div class="metric-bar-row highlight-row">
+                                <div class="metric-label-line">
+                                    <span><i class="fa-solid fa-tower-cell text-blue"></i> Layer 0: Network & Early-Media Interception</span>
+                                    <strong id="m-val-net">0.0%</strong>
+                                </div>
+                                <div class="bar-bg"><div id="m-bar-net" class="bar-fill green" style="width: 0%;"></div></div>
+                            </div>
+                            <div class="metric-bar-row">
+                                <div class="metric-label-line">
+                                    <span><i class="fa-solid fa-microchip text-amber"></i> Layer 1: Voice Authenticity (Synthetic Score)</span>
+                                    <strong id="m-val-synth">0.0%</strong>
+                                </div>
+                                <div class="bar-bg"><div id="m-bar-synth" class="bar-fill green" style="width: 0%;"></div></div>
+                            </div>
+                            <div class="metric-bar-row">
+                                <div class="metric-label-line">
+                                    <span><i class="fa-solid fa-user-check text-green"></i> Layer 2: Speaker Biometric Identity Match</span>
+                                    <strong id="m-val-spk">0.0%</strong>
+                                </div>
+                                <div class="bar-bg"><div id="m-bar-spk" class="bar-fill green" style="width: 0%;"></div></div>
+                            </div>
+                            <div class="metric-bar-row">
+                                <div class="metric-label-line">
+                                    <span><i class="fa-solid fa-masks-theater text-red"></i> Layer 3: Social Engineering NLP Threat</span>
+                                    <strong id="m-val-se">0.0%</strong>
+                                </div>
+                                <div class="bar-bg"><div id="m-bar-se" class="bar-fill green" style="width: 0%;"></div></div>
+                            </div>
+                            <div class="metric-bar-row">
+                                <div class="metric-label-line">
+                                    <span><i class="fa-solid fa-indian-rupee-sign text-amber"></i> Transaction Context Risk</span>
+                                    <strong id="m-val-tx">0.0%</strong>
+                                </div>
+                                <div class="bar-bg"><div id="m-bar-tx" class="bar-fill green" style="width: 0%;"></div></div>
+                            </div>
+                            <div class="metric-bar-row">
+                                <div class="metric-label-line">
+                                    <span><i class="fa-solid fa-tower-broadcast text-blue"></i> Replay & Acoustic Distortion Risk</span>
+                                    <strong id="m-val-replay">0.0%</strong>
+                                </div>
+                                <div class="bar-bg"><div id="m-bar-replay" class="bar-fill green" style="width: 0%;"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Step-Up Out-of-Band Verification Bar -->
+                        <div class="stepup-quick-box">
+                            <h3><i class="fa-solid fa-key"></i> Step-Up Out-of-Band Verification Gate</h3>
+                            <p class="stepup-desc">Trigger independent out-of-band verification challenge:</p>
+                            <div class="stepup-btns-grid">
+                                <button class="btn btn-secondary btn-sm" onclick="triggerStepUp('out_of_band_callback')">
+                                    <i class="fa-solid fa-phone"></i> Call Reg. Phone
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="triggerStepUp('banking_app_push')">
+                                    <i class="fa-solid fa-mobile-screen"></i> App Push Approve
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="triggerStepUp('hardware_token')">
+                                    <i class="fa-solid fa-shield"></i> Security Token
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="triggerStepUp('supervisor_confirm')">
+                                    <i class="fa-solid fa-user-shield"></i> Supervisor Confirm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Row: Live Call Stream & Mic Monitor Station in Command Center -->
+                <div class="panel glass-panel" style="margin-top: 14px;">
+                    <div class="panel-header">
+                        <h2><i class="fa-solid fa-microphone-lines text-green"></i> Live Call Stream & Microphone Monitor</h2>
+                        <span class="panel-badge">REAL-TIME INGESTION</span>
+                    </div>
+
+                    <div class="view-grid grid-2-col">
+                        <!-- Left: Live Waveform Stream & Controls -->
+                        <div class="stream-box">
+                            <div class="mic-visualizer-container">
+                                <canvas id="waveform-canvas"></canvas>
+                            </div>
+                            <div class="controls-row">
+                                <button id="btn-start-mic" class="btn btn-primary" onclick="startMicStream()">
+                                    <i class="fa-solid fa-play"></i> Start Live Call Monitor
+                                </button>
+                                <button id="btn-stop-mic" class="btn btn-secondary" onclick="stopMicStream()" disabled>
+                                    <i class="fa-solid fa-stop"></i> End Call Stream
+                                </button>
+                            </div>
+                            <p class="stream-hint"><i class="fa-solid fa-circle-info"></i> Speak into microphone. Telemetry is evaluated in 500ms sliding windows.</p>
+                        </div>
+
+                        <!-- Right: Live Call Context & Parameters -->
+                        <div class="context-form">
+                            <h3><i class="fa-solid fa-receipt text-blue"></i> Live Call Context Parameters</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="claimed-speaker-select">Claimed Caller Profile:</label>
+                                    <select id="claimed-speaker-select">
+                                        <option value="">-- Unverified / Guest Caller --</option>
+                                        <option value="spk_cfo_ananya">Ananya Sen (CFO)</option>
+                                        <option value="spk_ceo_rajesh">Rajesh Sharma (CEO)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tx-amount-input">Transaction Amount (₹ INR):</label>
+                                    <input type="number" id="tx-amount-input" value="0" placeholder="e.g. 3000000">
+                                </div>
+                            </div>
+                            <div class="form-grid" style="margin-top:8px;">
+                                <div class="form-group" style="flex:2;">
+                                    <label for="transcript-input"><i class="fa-solid fa-language text-blue"></i> Live Speech Transcript (ASR Output):</label>
+                                    <input type="text" id="transcript-input" value="" placeholder="Live speech transcript in Hindi (हिन्दी) / English...">
+                                </div>
+                                <div class="form-group" style="flex:1;">
+                                    <label for="asr-language-select"><i class="fa-solid fa-earth-asia text-green"></i> ASR Language:</label>
+                                    <select id="asr-language-select" class="asr-lang-picker">
+                                        <option value="auto">🌐 Auto-Detect (99+ Langs)</option>
+                                        <option value="hi" selected>🇮🇳 Hindi (हिन्दी / Hinglish)</option>
+                                        <option value="en">🇺🇸 English</option>
+                                        <option value="mr">🇮🇳 Marathi (मराठी)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- VIEW 2: LAYER 0 NETWORK GATE (Telecom & Early-Media Interception) -->
+            <!-- ========================================================================= -->
+            <section id="view-network" class="view-panel">
+                <div class="view-grid grid-2-col">
+                    <!-- Left: Telecom Signaling & SIP Header Parameters -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-tower-cell"></i> SIP Signaling & CLI Verification</h2>
+                            <span class="panel-badge">PRE-CALL GATE</span>
+                        </div>
+                        <p class="section-intro">
+                            Inspects SIP INVITE headers, STIR/SHAKEN cryptographic caller authentication, and VoIP proxy nodes before opening 2-way call audio.
+                        </p>
+
+                        <div class="form-grid" style="margin-top:14px;">
+                            <div class="form-group">
+                                <label for="stir-shaken-select">STIR/SHAKEN Attestation Level:</label>
+                                <select id="stir-shaken-select">
+                                    <option value="A" selected>Class A - Full Authentic CLI Verification (Verified)</option>
+                                    <option value="B">Class B - Partial Verification (Customer verified, unverified number)</option>
+                                    <option value="C">Class C - Gateway Attestation / Spoofed CLI (High Risk)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="voip-proxy-select">VoIP Anonymizer / Proxy Detection:</label>
+                                <select id="voip-proxy-select">
+                                    <option value="false" selected>Clean Carrier IP Trunk (Verified Route)</option>
+                                    <option value="true">High-Risk VoIP Proxy Node (Anonymous Gateway)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-grid" style="margin-top:14px;">
+                            <div class="form-group">
+                                <label for="user-agent-input">SIP User-Agent Header:</label>
+                                <input type="text" id="user-agent-input" value="Mozilla/5.0 WebRTC/1.0 (Carrier Trunk)" placeholder="e.g. Asterisk PBX / SIPp-tester">
+                            </div>
+                            <div class="form-group">
+                                <label for="cli-number-input">Calling Line Identification (CLI Number):</label>
+                                <input type="text" id="cli-number-input" value="+1-800-555-0199" placeholder="e.g. +1-800-555-0199">
+                            </div>
+                        </div>
+
+                        <div class="banner-highlight" style="margin-top:16px;">
+                            <h4><i class="fa-solid fa-shield-halved text-blue"></i> Pre-Call Blocking Rule:</h4>
+                            <p>If Network Signaling Risk is &ge; 75% or STIR/SHAKEN is Class C, the call is dropped immediately at Layer 0 with code <code>DROP_BEFORE_2WAY_COMMUNICATION</code>.</p>
+                        </div>
+                    </div>
+
+                    <!-- Right: Early-Media Acoustic Screening Console -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-wave-square"></i> Early-Media Pre-Answer Screening</h2>
+                            <span class="panel-badge">SIP 183 MEDIA</span>
+                        </div>
+                        <p class="section-intro">
+                            Screens the initial 0.5s–1.5s audio burst during call ring/greeting for neural vocoder phase artifacts prior to establishing 2-way call audio connection.
+                        </p>
+
+                        <div class="telemetry-stat-grid">
+                            <div class="stat-card">
+                                <div class="stat-title">Early-Media Analysis</div>
+                                <div class="stat-val text-green" id="stat-em-status">ACTIVE</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-title">Network Risk Score</div>
+                                <div class="stat-val text-blue" id="stat-em-risk">0.05 / 1.0</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-title">Vocoder Phase Artifact</div>
+                                <div class="stat-val text-green" id="stat-em-phase">CLEAN</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-title">Interception Action</div>
+                                <div class="stat-val text-blue" id="stat-em-action">ALLOW 2-WAY</div>
+                            </div>
+                        </div>
+
+                        <div class="callout-box" style="margin-top:16px;">
+                            <div class="callout-title"><i class="fa-solid fa-network-wired text-blue"></i> Network Defense Protocol:</div>
+                            <p>By stopping synthetic impersonation at Layer 0, the recipient is protected from ever hearing the AI-cloned voice, eliminating psychological manipulation before it starts.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- VIEW 3: ATTACK SIMULATOR LAB & AUDIO SUITE -->
+            <!-- ========================================================================= -->
+            <section id="view-simulator" class="view-panel">
+                <div class="view-grid grid-2-col">
+                    <!-- Left: Flagship Hackathon Attack Demos -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-flask-vial"></i> Flagship Attack Demonstration Lab</h2>
+                            <span class="panel-badge">1-CLICK DEMO</span>
+                        </div>
+                        <p class="section-intro">
+                            Execute pre-configured cyber attack scenarios to test real-time multi-layer detection and Core Banking freeze actions.
+                        </p>
+
+                        <div class="sim-scenario-list" id="sim-scenarios-container">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Mic Stream, Sample Suite & File Upload -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-microphone-lines"></i> Live Audio Input Channel</h2>
+                            <div class="sub-tab-group">
+                                <button class="sub-tab-btn active" onclick="switchInputSubTab('samples')"><i class="fa-solid fa-list-check"></i> Audio Suite</button>
+                                <button class="sub-tab-btn" onclick="switchInputSubTab('upload')"><i class="fa-solid fa-cloud-arrow-up"></i> Upload</button>
+                            </div>
+                        </div>
+
+                        <!-- Sub-tab 1: Sample Suite -->
+                        <div id="subtab-samples" class="subtab-content active">
+                            <div class="sample-grid" id="sample-cards-container">
+                                <!-- Populated dynamically via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Sub-tab 2: File Upload -->
+                        <div id="subtab-upload" class="subtab-content">
+                            <div class="upload-dropzone" onclick="document.getElementById('audio-file-input').click()">
+                                <i class="fa-solid fa-file-audio upload-icon"></i>
+                                <p class="upload-title">Click or Drop Audio File Here</p>
+                                <p class="upload-sub">Supports WAV, MP3 (16kHz recommended)</p>
+                                <input type="file" id="audio-file-input" accept="audio/*" style="display:none;" onchange="handleFileUpload(event)">
+                            </div>
+                            <div id="file-info" class="file-info-bar" style="display:none;"></div>
+                        </div>
+
+                        <!-- Context Parameters Form -->
+                        <div class="context-form" style="margin-top:14px;">
+                            <h3><i class="fa-solid fa-receipt"></i> Caller & Transaction Context</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="claimed-speaker-select">Claimed Speaker Profile:</label>
+                                    <select id="claimed-speaker-select">
+                                        <option value="">-- Unverified / Guest Caller --</option>
+                                        <option value="spk_cfo_ananya">Ananya Sen (CFO)</option>
+                                        <option value="spk_ceo_rajesh">Rajesh Sharma (CEO)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="tx-amount-input">Transaction Amount (₹ INR):</label>
+                                    <input type="number" id="tx-amount-input" value="0" placeholder="e.g. 3000000">
+                                </div>
+                            </div>
+                            <div class="form-grid" style="margin-top:8px;">
+                                <div class="form-group" style="flex:2;">
+                                    <label for="transcript-input-upload"><i class="fa-solid fa-language text-blue"></i> Live Speech Transcript (ASR Output):</label>
+                                    <input type="text" id="transcript-input-upload" class="transcript-display-input" value="" placeholder="Live speech transcript in Hindi (हिन्दी) / English...">
+                                </div>
+                                <div class="form-group" style="flex:1;">
+                                    <label for="asr-language-select-upload"><i class="fa-solid fa-earth-asia text-green"></i> ASR Language:</label>
+                                    <select id="asr-language-select-upload" class="asr-lang-picker">
+                                        <option value="auto">🌐 Auto-Detect (99+ Langs)</option>
+                                        <option value="hi" selected>🇮🇳 Hindi (हिन्दी / Hinglish)</option>
+                                        <option value="en">🇺🇸 English</option>
+                                        <option value="mr">🇮🇳 Marathi (मराठी)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- VIEW 4: CORE BANKING SYSTEM (CBS) & TRANSACTION FIREWALL -->
+            <!-- ========================================================================= -->
+            <section id="view-banking" class="view-panel">
+                <div class="view-grid grid-2-col">
+                    <!-- Left: Active Transaction Interception & Freeze Engine -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-building-columns text-blue"></i> Real-Time Payment Gateway Interceptor</h2>
+                            <span id="cbs-status-badge" class="score-tag tag-standby">STANDBY</span>
+                        </div>
+                        <p class="section-intro">
+                            When an AI voice clone call attempts unauthorized fund transfer, the transaction is intercepted and frozen before funds are settled.
+                        </p>
+
+                        <div class="cbs-details-box" style="margin-top:14px;">
+                            <div class="cbs-row">
+                                <span class="cbs-label"><i class="fa-solid fa-wallet text-blue"></i> Source / Debtor Account:</span>
+                                <strong id="cbs-source-acc" class="cbs-val">ACC-9823418821 (Ananya Sen - SBI Corporate Treasury)</strong>
+                            </div>
+                            <div class="cbs-row highlight-target">
+                                <span class="cbs-label"><i class="fa-solid fa-user-xmark text-red"></i> Target Beneficiary Account:</span>
+                                <strong id="cbs-target-acc" class="cbs-val text-red">ACC-7729104812 (Mule Beneficiary Account - Cyber Fraud Ring)</strong>
+                            </div>
+                            <div class="cbs-row">
+                                <span class="cbs-label"><i class="fa-solid fa-money-bill-transfer text-amber"></i> Transfer Amount:</span>
+                                <strong id="cbs-amount-val" class="cbs-val text-amber">₹ 30,00,000.00</strong>
+                            </div>
+                            <div class="cbs-row">
+                                <span class="cbs-label"><i class="fa-solid fa-stopwatch text-green"></i> Interception Latency:</span>
+                                <strong id="cbs-latency-val" class="cbs-val text-green">⚡ ~38.4 ms (Instant Pre-Clearing Hold)</strong>
+                            </div>
+                        </div>
+
+                        <div class="cbs-action-row" style="margin-top:16px;">
+                            <button id="btn-block-txn" class="btn btn-danger btn-block-cbs" onclick="executeFreezeTransaction()">
+                                <i class="fa-solid fa-lock"></i> Freeze & Block Bank Transaction
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Bank Account Registry & Ledger Overview -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-book"></i> Core Banking Account Ledger Registry</h2>
+                            <span class="panel-badge">CBS REGISTRY</span>
+                        </div>
+                        <p class="section-intro">
+                            Monitored enterprise accounts and high-velocity mule account watchlists.
+                        </p>
+
+                        <div class="account-table-container" style="margin-top:12px;">
+                            <table class="account-table">
+                                <thead>
+                                    <tr>
+                                        <th>Account #</th>
+                                        <th>Holder Name</th>
+                                        <th>Type & Bank</th>
+                                        <th>Balance</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>ACC-9823418821</code></td>
+                                        <td>Ananya Sen (CFO)</td>
+                                        <td>Corporate Current (SBI Hub)</td>
+                                        <td>₹1,50,00,000</td>
+                                        <td><span class="status-pill text-green">ACTIVE</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>ACC-4491028301</code></td>
+                                        <td>Rajesh Sharma (CEO)</td>
+                                        <td>Executive Premium (HDFC)</td>
+                                        <td>₹85,00,000</td>
+                                        <td><span class="status-pill text-green">ACTIVE</span></td>
+                                    </tr>
+                                    <tr class="row-flagged">
+                                        <td><code>ACC-7729104812</code></td>
+                                        <td>Unknown Entity</td>
+                                        <td>High-Velocity Mule (NeoBank)</td>
+                                        <td>₹12,500</td>
+                                        <td><span class="status-pill text-red">WATCHLIST</span></td>
+                                    </tr>
+                                    <tr class="row-flagged">
+                                        <td><code>ACC-1102938475</code></td>
+                                        <td>Offshore Clearing</td>
+                                        <td>Settlement (Global Clearing)</td>
+                                        <td>₹0</td>
+                                        <td><span class="status-pill text-red">HIGH RISK</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- VIEW 5: DEEP FORENSICS & BIOMETRICS -->
+            <!-- ========================================================================= -->
+            <section id="view-forensics" class="view-panel">
+                <div class="view-grid grid-2-col">
+                    <!-- Left: Acoustic & Vocoder Feature Diagnostics -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-wave-square"></i> Acoustic & Vocoder Feature Diagnostics</h2>
+                            <span id="spec-score-val" class="score-tag">Score: 0.0</span>
+                        </div>
+                        <div class="feature-rows" style="margin-top:12px;">
+                            <div class="feat-row"><span>Spectral Flatness (Wiener Entropy):</span><strong id="val-flatness">0.00</strong></div>
+                            <div class="feat-row"><span>High-Freq Vocoder Ratio (&gt;6.5kHz):</span><strong id="val-hfratio">0.00</strong></div>
+                            <div class="feat-row"><span>Spectral Centroid:</span><strong id="val-centroid">0 Hz</strong></div>
+                            <div class="feat-row"><span>Vocal Jitter / Vocal Shimmer:</span><strong id="val-jitter-shimmer">0.0 / 0.0</strong></div>
+                        </div>
+
+                        <!-- Social Engineering Tactics Tags -->
+                        <div style="margin-top:16px;">
+                            <div class="diag-card-title">
+                                <span><i class="fa-solid fa-comments"></i> NLP Social Engineering Tactics</span>
+                                <span id="se-tactics-count" class="score-tag">0 Detected</span>
+                            </div>
+                            <div id="se-tactic-tags-box" class="tactic-tags-container" style="margin-top:8px;">
+                                <span class="tag-none">No manipulation tactics detected.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Multi-Vector Forensic Radar Chart & Voice Vault -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-brain"></i> 6-Vector Feature Risk Radar</h2>
+                            <span class="panel-badge">ML ENSEMBLE</span>
+                        </div>
+                        <div class="radar-chart-box">
+                            <canvas id="artifact-radar-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================================================= -->
+            <!-- VIEW 6: AUDIT & SECURITY LOGS -->
+            <!-- ========================================================================= -->
+            <section id="view-audit" class="view-panel">
+                <div class="view-grid grid-2-col">
+                    <!-- Left: Incident Audit Log Table -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-clipboard-list"></i> Security Incident Audit Log</h2>
+                            <span class="panel-badge">DPDP COMPLIANT</span>
+                        </div>
+                        <div class="audit-table-box" style="margin-top:12px;">
+                            <table class="account-table">
+                                <thead>
+                                    <tr>
+                                        <th>Call ID</th>
+                                        <th>Caller Profile</th>
+                                        <th>Risk Score</th>
+                                        <th>Action Taken</th>
+                                        <th>Timestamp</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>CALL_849201</code></td>
+                                        <td>Ananya Sen (CFO)</td>
+                                        <td><span class="text-red font-bold">100.0 / 100</span></td>
+                                        <td><span class="status-pill text-red">DROP_PRE_2WAY</span></td>
+                                        <td>2026-09-04 11:36:47</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>CALL_582910</code></td>
+                                        <td>Rajesh Sharma (CEO)</td>
+                                        <td><span class="text-green font-bold">8.8 / 100</span></td>
+                                        <td><span class="status-pill text-green">ALLOW</span></td>
+                                        <td>2026-09-04 11:05:32</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>CALL_391024</code></td>
+                                        <td>Guest Caller</td>
+                                        <td><span class="text-amber font-bold">42.0 / 100</span></td>
+                                        <td><span class="status-pill text-amber">STEPUP_CHALLENGE</span></td>
+                                        <td>2026-09-04 10:48:15</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right: Zero-Retention Privacy Architecture -->
+                    <div class="panel glass-panel">
+                        <div class="panel-header">
+                            <h2><i class="fa-solid fa-user-shield"></i> Privacy & Compliance Framework</h2>
+                            <span class="panel-badge">INDIA DPDP ACT</span>
+                        </div>
+                        <div class="privacy-card-content" style="margin-top:12px; display:flex; flex-direction:column; gap:12px;">
+                            <div class="banner-highlight">
+                                <h4><i class="fa-solid fa-shield-halved text-green"></i> Zero Raw Audio Retention Guarantee</h4>
+                                <p>Voice streams are analyzed in-memory via sliding ephemeral FFT buffers. Raw audio is purged within 500ms of processing. Only anonymized mathematical feature vectors and biometric cosine distances are audited.</p>
+                            </div>
+                            <div class="banner-highlight">
+                                <h4><i class="fa-solid fa-fingerprint text-blue"></i> Voice Identity Vault Protection</h4>
+                                <p>Speaker voiceprints are stored strictly as 128-dimensional irreversible acoustic embedding vectors. Voice reconstruction from embeddings is mathematically infeasible.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Pre-Transaction Warning Alert Modal -->
+        <div id="alert-modal" class="modal-backdrop">
+            <div class="modal-card">
+                <div class="modal-header modal-red">
+                    <i class="fa-solid fa-shield-triangle-exclamation modal-icon"></i>
+                    <div>
+                        <h3 class="modal-title">🚨 HIGH-RISK VOICE IMPERSONATION DETECTED!</h3>
+                        <p class="modal-sub">VoiceFraudShield Security Engine Active</p>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="alert-banner-box">
+                        <div class="risk-score-display">RISK SCORE: <span id="modal-risk-score">94.0</span> / 100</div>
+                        <p class="alert-desc" id="modal-alert-desc">Multi-vector risk fusion has flagged this call as a high-confidence impersonation attack.</p>
+                    </div>
+                    <!-- Modal Core Banking Interception Callout -->
+                    <div class="modal-cbs-box" style="margin: 12px 0; padding: 10px; background: rgba(255, 51, 102, 0.1); border: 1px solid rgba(255, 51, 102, 0.3); border-radius: 8px;">
+                        <div style="font-size: 11px; font-weight: 700; color: #ff3366; text-transform: uppercase; margin-bottom: 4px;">
+                            <i class="fa-solid fa-building-columns"></i> Pending Core Banking Transaction Intercepted:
+                        </div>
+                        <div style="font-size: 12px; color: #f0f4f8;">
+                            Debtor Account: <strong id="modal-source-acc">ACC-9823418821 (SBI Treasury)</strong><br>
+                            Mule Beneficiary: <strong id="modal-target-acc" style="color: #ff3366;">ACC-7729104812 (Mule Escrow)</strong><br>
+                            Amount: <strong id="modal-amount-val" style="color: #ffb800;">₹ 30,00,000.00</strong> | Latency: <span style="color: #00e699;">⚡ ~38.4ms</span>
+                        </div>
+                    </div>
+                    <div class="modal-actions-list">
+                        <h4>RECOMMENDED ACTION:</h4>
+                        <p style="font-size:12px; color:#f0f4f8; margin-bottom:10px;">Do NOT approve financial transfer based on this call. Require independent out-of-band verification.</p>
+                        <div class="stepup-modal-btns">
+                            <button class="btn btn-primary" onclick="triggerStepUp('out_of_band_callback')"><i class="fa-solid fa-phone"></i> Call Registered Number</button>
+                            <button class="btn btn-danger" onclick="executeFreezeTransaction()"><i class="fa-solid fa-lock"></i> Freeze Bank Transaction</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="closeAlertModal()">Acknowledge & Inspect</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/visualizers.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
