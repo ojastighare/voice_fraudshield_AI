@@ -5,7 +5,6 @@ import numpy as np
 import scipy.io.wavfile as wav
 import io
 import soundfile as sf
-import librosa
 from fastapi import APIRouter, File, UploadFile, Form, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
@@ -13,11 +12,38 @@ from typing import Optional, Dict, Any, List
 
 def decode_audio_bytes(raw_bytes: bytes) -> tuple:
     """
-    Universally decodes audio bytes from any format:
-    M4A, AAC, MP3, MP4, WAV (8/16/24/32-bit float), FLAC, OGG, WebM, WMA, ALAC, AIFF, raw PCM.
+    Universally decodes audio bytes from any standard audio format:
+    WAV, FLAC, OGG, PCM, MP3, M4A, AAC, etc.
+    Memory-efficient for cloud environments (512MB RAM).
     Returns (sample_rate, mono_float32_array).
     """
-    # 1. Try PyAV (Universal media container & codec decoder - handles M4A, MP3, AAC, OGG, WAV, etc.)
+    # 1. Try SoundFile (fastest, lightweight C-libsndfile - handles WAV, FLAC, OGG, RAW)
+    try:
+        data, sr = sf.read(io.BytesIO(raw_bytes), dtype='float32')
+        if len(data.shape) > 1:
+            data = np.mean(data, axis=1)
+        return int(sr), data.astype(np.float32)
+    except Exception:
+        pass
+
+    # 2. Try Scipy wav (pure numpy/scipy - ultra fast, 0 overhead)
+    try:
+        sr, audio_data = wav.read(io.BytesIO(raw_bytes))
+        if len(audio_data.shape) > 1:
+            audio_data = audio_data[:, 0]
+        if audio_data.dtype == np.int16:
+            audio_float = audio_data.astype(np.float32) / 32768.0
+        elif audio_data.dtype == np.int32:
+            audio_float = audio_data.astype(np.float32) / 2147483648.0
+        elif audio_data.dtype == np.uint8:
+            audio_float = (audio_data.astype(np.float32) - 128.0) / 128.0
+        else:
+            audio_float = audio_data.astype(np.float32)
+        return int(sr), audio_float
+    except Exception:
+        pass
+
+    # 3. Try PyAV if installed (Universal media container & codec decoder)
     try:
         import av
         container = av.open(io.BytesIO(raw_bytes))
@@ -35,17 +61,9 @@ def decode_audio_bytes(raw_bytes: bytes) -> tuple:
     except Exception:
         pass
 
-    # 2. Try SoundFile (fastest, standard for WAV, FLAC, OGG)
+    # 4. Try Librosa if installed (handles MP3, M4A, AAC, WebM)
     try:
-        data, sr = sf.read(io.BytesIO(raw_bytes), dtype='float32')
-        if len(data.shape) > 1:
-            data = np.mean(data, axis=1)
-        return int(sr), data.astype(np.float32)
-    except Exception:
-        pass
-
-    # 3. Try Librosa (handles MP3, M4A, AAC, WebM)
-    try:
+        import librosa
         data, sr = librosa.load(io.BytesIO(raw_bytes), sr=None, mono=True)
         return int(sr), data.astype(np.float32)
     except Exception:
