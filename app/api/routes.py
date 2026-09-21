@@ -526,13 +526,15 @@ async def websocket_stream_detect(websocket: WebSocket):
 
             if audio_b64:
                 raw_bytes = base64.b64decode(audio_b64.split(",")[-1])
-                audio_int16 = np.frombuffer(raw_bytes, dtype=np.int16)
-                audio_float = audio_int16.astype(np.float32) / 32768.0
-                
-                audio_buffer.extend(audio_float.tolist())
+                even_len = len(raw_bytes) - (len(raw_bytes) % 2)
+                if even_len > 0:
+                    audio_int16 = np.frombuffer(raw_bytes[:even_len], dtype=np.int16)
+                    audio_float = audio_int16.astype(np.float32) / 32768.0
+                    audio_buffer.extend(audio_float.tolist())
 
                 if len(audio_buffer) >= 8000:
                     window_audio = np.array(audio_buffer[-48000:], dtype=np.float32)
+                    audio_buffer = audio_buffer[-48000:]
                     res = process_audio_numpy(window_audio, sample_rate=sample_rate, context_data=context_data)
                     await websocket.send_json(res)
 

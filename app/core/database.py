@@ -4,7 +4,8 @@ import json
 import time
 from typing import Dict, Any, List, Optional
 
-DB_PATH = "data/voice_fraud_shield.db"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+DB_PATH = os.path.join(BASE_DIR, "data", "voice_fraud_shield.db")
 
 class DatabaseManager:
     """
@@ -13,8 +14,8 @@ class DatabaseManager:
     Risk Events, Conversation NLP Events, and Audit Telemetry.
     """
 
-    def __init__(self, db_path: str = DB_PATH):
-        self.db_path = db_path
+    def __init__(self, db_path: str = None):
+        self.db_path = db_path or DB_PATH
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         self.init_db()
 

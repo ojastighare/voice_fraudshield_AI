@@ -3,6 +3,8 @@ import json
 import numpy as np
 import scipy.signal
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 class BiometricVerifier:
     """
     Cross-session speaker verification engine.
@@ -10,8 +12,16 @@ class BiometricVerifier:
     against enrolled target voiceprints (e.g. CXOs, Bank Executives, High-Risk Users).
     """
 
-    def __init__(self, enrolled_dir: str = "data/enrolled_voiceprints", sample_rate=16000):
-        self.enrolled_dir = enrolled_dir
+    def __init__(self, enrolled_dir: str = None, sample_rate=16000):
+        if enrolled_dir:
+            self.enrolled_dir = enrolled_dir
+        else:
+            candidates = [
+                os.path.join(BASE_DIR, "data", "enrolled_voiceprints"),
+                "data/enrolled_voiceprints"
+            ]
+            self.enrolled_dir = next((c for c in candidates if os.path.exists(c)), candidates[0])
+            
         self.sample_rate = sample_rate
         self.enrolled_profiles = {}
         os.makedirs(self.enrolled_dir, exist_ok=True)
