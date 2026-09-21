@@ -390,6 +390,35 @@ async def transcribe_audio_file(
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"ASR transcription failed: {str(e)}")
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+@router.get("/api/v1/samples")
+async def list_sample_catalog():
+    candidates = [
+        os.path.join(BASE_DIR, "data", "sample_audio", "samples_catalog.json"),
+        os.path.join("data", "sample_audio", "samples_catalog.json")
+    ]
+    for catalog_path in candidates:
+        if os.path.exists(catalog_path):
+            with open(catalog_path, "r") as f:
+                catalog = json.load(f)
+            return JSONResponse(content={"samples": catalog})
+    return JSONResponse(content={"samples": []})
+
+@router.get("/api/v1/samples/{sample_id}/audio")
+async def get_sample_audio(sample_id: str):
+    clean_id = sample_id.replace(".wav", "")
+    candidates = [
+        os.path.join(BASE_DIR, "data", "sample_audio", f"{clean_id}.wav"),
+        os.path.join("data", "sample_audio", f"{clean_id}.wav"),
+        os.path.join(BASE_DIR, "data", "sample_audio", f"{sample_id}"),
+        os.path.join("data", "sample_audio", f"{sample_id}")
+    ]
+    for file_path in candidates:
+        if os.path.exists(file_path):
+            return FileResponse(file_path, media_type="audio/wav")
+    raise HTTPException(status_code=404, detail="Audio sample file not found")
+
 # Attack Simulator Lab Endpoints
 @router.get("/api/v1/simulator/scenarios")
 async def list_simulator_scenarios():
@@ -402,10 +431,16 @@ async def run_simulator_scenario(scenario_id: str):
     scenario = attack_simulator.get_scenario(scenario_id)
     file_path = scenario["sample_file"]
     
-    if not os.path.exists(file_path):
+    candidates = [
+        os.path.join(BASE_DIR, file_path),
+        file_path,
+        os.path.join(BASE_DIR, "data", "sample_audio", os.path.basename(file_path))
+    ]
+    resolved_path = next((p for p in candidates if os.path.exists(p)), None)
+    if not resolved_path:
         raise HTTPException(status_code=404, detail=f"Scenario audio file {file_path} not found")
 
-    with open(file_path, "rb") as f:
+    with open(resolved_path, "rb") as f:
         sr, audio_float = decode_audio_bytes(f.read())
 
     context_data = {
@@ -451,22 +486,6 @@ async def enroll_speaker(req: EnrollSpeakerRequest):
         return JSONResponse(content=res)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Enrollment failed: {str(e)}")
-
-@router.get("/api/v1/samples")
-async def list_sample_catalog():
-    catalog_path = "data/sample_audio/samples_catalog.json"
-    if os.path.exists(catalog_path):
-        with open(catalog_path, "r") as f:
-            catalog = json.load(f)
-        return JSONResponse(content={"samples": catalog})
-    return JSONResponse(content={"samples": []})
-
-@router.get("/api/v1/samples/{sample_id}/audio")
-async def get_sample_audio(sample_id: str):
-    file_path = os.path.join("data/sample_audio", f"{sample_id}.wav")
-    if os.path.exists(file_path):
-        return FileResponse(file_path, media_type="audio/wav")
-    raise HTTPException(status_code=404, detail="Audio sample file not found")
 
 # Core Banking System (CBS) Demo API Endpoints
 @router.get("/api/v1/banking/accounts")
