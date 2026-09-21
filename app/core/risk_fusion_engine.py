@@ -95,10 +95,10 @@ class RiskFusionEngine:
         # Dedicated AI Voice Clone Detection Amplifier
         is_synthetic = (
             deep_ml_res.get("is_synthetic_prediction", False) or 
-            p_synthetic >= 0.35 or 
-            voice_authenticity_score >= 30.0 or
-            synth_spectral >= 0.30 or
-            synth_prosody >= 0.35
+            p_synthetic >= 0.30 or 
+            voice_authenticity_score >= 25.0 or
+            synth_spectral >= 0.25 or
+            synth_prosody >= 0.30
         )
 
         if is_synthetic:

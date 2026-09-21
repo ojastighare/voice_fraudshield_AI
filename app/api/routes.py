@@ -173,13 +173,19 @@ def process_audio_numpy(audio_np: np.ndarray, sample_rate: int = 16000, context_
     """
     context_data = context_data or {}
     if sample_rate != 16000 and len(audio_np) > 0:
-        num_samples = int(len(audio_np) * 16000 / sample_rate)
-        audio_np = np.interp(
-            np.linspace(0, len(audio_np), num_samples, endpoint=False),
-            np.arange(len(audio_np)),
-            audio_np
-        ).astype(np.float32)
-        sample_rate = 16000
+        try:
+            import scipy.signal
+            num_samples = int(len(audio_np) * 16000 / sample_rate)
+            audio_np = scipy.signal.resample(audio_np, num_samples).astype(np.float32)
+            sample_rate = 16000
+        except Exception:
+            num_samples = int(len(audio_np) * 16000 / sample_rate)
+            audio_np = np.interp(
+                np.linspace(0, len(audio_np), num_samples, endpoint=False),
+                np.arange(len(audio_np)),
+                audio_np
+            ).astype(np.float32)
+            sample_rate = 16000
 
     # 0. Layer 0 Network Gate Evaluation
     sip_headers = context_data.get("sip_headers", {})
