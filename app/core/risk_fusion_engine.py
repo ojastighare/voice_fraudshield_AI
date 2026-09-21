@@ -93,13 +93,19 @@ class RiskFusionEngine:
         multipliers = 0.0
 
         # Dedicated AI Voice Clone Detection Amplifier
-        is_synthetic = deep_ml_res.get("is_synthetic_prediction", False) or p_synthetic >= 0.45 or voice_authenticity_score >= 40.0
+        is_synthetic = (
+            deep_ml_res.get("is_synthetic_prediction", False) or 
+            p_synthetic >= 0.35 or 
+            voice_authenticity_score >= 30.0 or
+            synth_spectral >= 0.30 or
+            synth_prosody >= 0.35
+        )
 
         if is_synthetic:
             # Direct synthetic voice attack: Boost into RED Critical Risk
-            synth_boost = max((voice_authenticity_score - 20.0) * 1.5, 45.0)
+            synth_boost = max((voice_authenticity_score - 15.0) * 1.6, 50.0)
             multipliers += synth_boost
-        elif voice_authenticity_score >= 25.0 and p_synthetic >= 0.25:
+        elif voice_authenticity_score >= 20.0 and p_synthetic >= 0.20:
             multipliers += 15.0
 
         if network_blocked or network_risk_score >= 70.0:

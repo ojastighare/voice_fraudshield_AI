@@ -84,32 +84,37 @@ class SpectralAnalyzer:
         mean_flux = float(np.mean(spectral_flux))
 
         # 9. Compute Synthetic Artifact Indicators
-        # - Phase determinism: neural vocoder reconstruction creates deterministic phase paths (< 1.25)
-        if phase_jitter < 1.25:
-            phase_anomaly = float(np.clip((1.25 - phase_jitter) / 0.20, 0.0, 1.0))
+        # - Phase determinism: neural vocoder reconstruction creates deterministic phase paths (< 1.30)
+        if phase_jitter < 1.30:
+            phase_anomaly = float(np.clip((1.30 - phase_jitter) / 0.25, 0.0, 1.0))
         else:
             phase_anomaly = 0.0
 
         # - High-frequency vocoder power leakage (> 5500 Hz):
-        # Natural human sibilants ('s', 'sh') have turbulent phase (phase_jitter > 1.30).
-        # Neural vocoder mirror artifacts have locked phase (phase_anomaly > 0.15) or extreme leakage (> 0.055).
-        if hf_power_ratio > 0.055 and (phase_anomaly > 0.10 or phase_jitter < 1.28):
-            hf_anomaly = float(np.clip((hf_power_ratio - 0.055) / 0.025, 0.0, 1.0))
-        elif hf_power_ratio > 0.075:
-            hf_anomaly = float(np.clip((hf_power_ratio - 0.075) / 0.030, 0.0, 1.0))
+        if hf_power_ratio > 0.020:
+            hf_anomaly = float(np.clip((hf_power_ratio - 0.020) / 0.035, 0.0, 1.0))
         else:
             hf_anomaly = 0.0
 
-        # - Spectral bandwidth anomaly only contributes when vocoder HF leakage or phase determinism is present
-        if (hf_anomaly > 0.15 or phase_anomaly > 0.15) and mean_bandwidth > 1400.0:
-            bandwidth_anomaly = float(np.clip((mean_bandwidth - 1400.0) / 600.0, 0.0, 1.0))
+        # - Spectral Flatness Anomaly (Neural TTS exhibits unnaturally low flatness < 0.035 in speech)
+        if mean_flatness < 0.035:
+            flatness_anomaly = float(np.clip((0.035 - mean_flatness) / 0.025, 0.0, 1.0))
+        else:
+            flatness_anomaly = 0.0
+
+        # - Spectral Bandwidth Discontinuity (Neural vocoder high-band dispersion > 1300 Hz)
+        if mean_bandwidth > 1300.0 and (hf_anomaly > 0.10 or phase_anomaly > 0.10):
+            bandwidth_anomaly = float(np.clip((mean_bandwidth - 1300.0) / 600.0, 0.0, 1.0))
         else:
             bandwidth_anomaly = 0.0
 
-        if hf_anomaly == 0.0 and phase_anomaly == 0.0:
-            synthetic_spectral_score = 0.0
-        else:
-            synthetic_spectral_score = round(0.50 * hf_anomaly + 0.30 * bandwidth_anomaly + 0.20 * phase_anomaly, 4)
+        synthetic_spectral_score = round(
+            0.40 * phase_anomaly + 
+            0.35 * hf_anomaly + 
+            0.15 * flatness_anomaly + 
+            0.10 * bandwidth_anomaly, 
+            4
+        )
 
         return {
             "spectral_centroid": round(mean_centroid, 2),

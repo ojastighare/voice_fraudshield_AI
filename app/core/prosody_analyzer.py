@@ -70,25 +70,21 @@ class ProsodyAnalyzer:
 
         # 6. Compute Synthetic Prosody Score (0.0 to 1.0)
         # Neural TTS anomalies:
-        # - Sudden discrete pitch spikes / glitches (relative pitch_jumps > 0.20)
-        # - Extreme unnatural flutter / jitter (> 0.18)
-        # - Rigid flat robotic pitch line (voiced_f0 > 40 with std_f0 < 2.0)
-        prosodic_anomalies = []
+        # - Robotic hyper-smoothness (unnatural absence of vocal micro-tremors: shimmer < 0.025, jitter < 0.005)
+        # - Step-wise pitch glitches (unnatural pitch jumps)
+        # - Rigid flat robotic pitch contour (f0_std < 5.0)
+        shimmer_anomaly = float(np.clip((0.025 - shimmer) / 0.020, 0.0, 1.0)) if (shimmer < 0.025 and len(voiced_f0) > 5) else 0.0
+        jitter_anomaly = float(np.clip((0.005 - jitter) / 0.004, 0.0, 1.0)) if (jitter < 0.005 and len(voiced_f0) > 5) else 0.0
+        pitch_jump_anomaly = float(np.clip(pitch_jumps * 8.0, 0.0, 1.0))
+        flat_pitch_anomaly = 0.8 if (len(voiced_f0) > 20 and std_f0 < 5.0) else 0.0
 
-        if len(voiced_f0) > 10:
-            # Unnatural discrete pitch jumps
-            prosodic_anomalies.append(float(np.clip(pitch_jumps * 8.0, 0.0, 1.0)))
-            # Extreme flutter / jitter
-            prosodic_anomalies.append(1.0 if jitter > 0.18 else 0.0)
-            # Long-duration flat robotic line
-            if len(voiced_f0) > 60 and std_f0 < 2.0:
-                prosodic_anomalies.append(0.8)
-            else:
-                prosodic_anomalies.append(0.0)
-        else:
-            prosodic_anomalies.append(0.0)
-
-        synthetic_prosody_score = float(np.mean(prosodic_anomalies))
+        synthetic_prosody_score = round(
+            0.40 * shimmer_anomaly + 
+            0.30 * jitter_anomaly + 
+            0.20 * pitch_jump_anomaly + 
+            0.10 * flat_pitch_anomaly, 
+            4
+        )
 
         return {
             "mean_f0": round(mean_f0, 2),
