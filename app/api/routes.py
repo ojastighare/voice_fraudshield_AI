@@ -261,8 +261,9 @@ def process_audio_numpy(audio_np: np.ndarray, sample_rate: int = 16000, context_
     
     is_clone_call = (
         fusion_res.get("overall_risk_score", 0.0) >= 70.0 or 
+        fusion_res.get("risk_tier") == "RED" or
         network_res.get("blocked", False) or 
-        (fusion_res["metric_breakdown"].get("voice_authenticity_score", 0.0) >= 55.0 and deep_ml_res.get("is_synthetic_prediction", False))
+        (fusion_res["metric_breakdown"].get("voice_authenticity_score", 0.0) >= 40.0 and deep_ml_res.get("is_synthetic_prediction", False))
     )
 
     if tx_amount <= 0 and is_clone_call:

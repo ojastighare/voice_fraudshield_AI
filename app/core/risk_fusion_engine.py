@@ -93,58 +93,59 @@ class RiskFusionEngine:
         multipliers = 0.0
 
         # Dedicated AI Voice Clone Detection Amplifier
-        # High threat boost requires concurrence of acoustic and neural classifier
-        if voice_authenticity_score >= 50.0 or p_synthetic >= 0.50:
+        is_synthetic = deep_ml_res.get("is_synthetic_prediction", False) or p_synthetic >= 0.45 or voice_authenticity_score >= 40.0
+
+        if is_synthetic:
             # Direct synthetic voice attack: Boost into RED Critical Risk
-            synth_boost = max((voice_authenticity_score - 25.0) * 1.3, 45.0)
+            synth_boost = max((voice_authenticity_score - 20.0) * 1.5, 45.0)
             multipliers += synth_boost
-        elif voice_authenticity_score >= 35.0 and p_synthetic >= 0.35:
+        elif voice_authenticity_score >= 25.0 and p_synthetic >= 0.25:
             multipliers += 15.0
 
-        if network_blocked or network_risk_score >= 75.0:
+        if network_blocked or network_risk_score >= 70.0:
             multipliers += 40.0 # Early network drop / CLI spoofing penalty
         elif network_risk_score >= 40.0:
             multipliers += 10.0
 
-        if voice_authenticity_score > 50 and se_score > 35:
-            multipliers += 15.0 # Combined synthetic audio + social engineering
-        if is_claimed and not is_match and se_score > 30:
-            multipliers += 20.0 # Speaker identity mismatch + urgent money request
+        if is_synthetic and se_score > 25:
+            multipliers += 25.0 # Combined synthetic audio + social engineering
+        if is_claimed and not is_match and (se_score > 25 or tx_amount > 100000):
+            multipliers += 30.0 # Speaker identity mismatch + urgent money request
         if "⚠ Secrecy / No-Callback" in se_tags or "⚠ Urgency & Time Pressure" in se_tags:
-            multipliers += 10.0
+            multipliers += 15.0
 
         overall_risk_score = round(float(min(max(base_fused + multipliers, 0.0), 100.0)), 1)
         
         # Guardrails: Synthetic voice or pre-call drop must trigger high/critical risk
         if network_blocked:
-            overall_risk_score = max(overall_risk_score, 94.0)
-        elif (voice_authenticity_score >= 50.0 or p_synthetic >= 0.50):
+            overall_risk_score = max(overall_risk_score, 95.0)
+        elif is_synthetic or (se_score >= 50.0 and tx_amount >= 500000.0):
             overall_risk_score = max(overall_risk_score, 88.0)
-        elif voice_authenticity_score <= 35.0 and p_synthetic <= 0.30 and network_risk_score < 30.0 and se_score <= 30.0:
-            # Genuine caller: Keep strictly in GREEN safe tier (4% - 10%)
+        elif not is_synthetic and voice_authenticity_score <= 25.0 and p_synthetic <= 0.20 and network_risk_score < 30.0 and se_score <= 25.0:
+            # Genuine caller: Keep strictly in GREEN safe tier (2.5% - 9.5%)
             overall_risk_score = min(overall_risk_score, 9.5)
 
         # 3. Risk Tier & Adaptive Action Assignment
-        if network_blocked or overall_risk_score >= 75.0:
+        if network_blocked or overall_risk_score >= 70.0:
             risk_tier = "RED"
             risk_label = "CRITICAL RISK - Pre-Call Drop / AI Voice Clone Impersonation" if network_blocked else "CRITICAL RISK - AI Voice Clone Impersonation Attack"
             action_code = "DROP_BEFORE_2WAY_COMMUNICATION" if network_blocked else "EMERGENCY_FREEZE_PAYMENT"
-            adaptive_threshold_msg = "Layer 0 Pre-Call Interception Gate: Call blocked before 2-way audio channel established!" if network_blocked else "Risk Level >= 75: High Threat Detected. Core Banking Freeze & Step-Up Verification Enforced."
-        elif overall_risk_score >= 50.0:
+            adaptive_threshold_msg = "Layer 0 Pre-Call Interception Gate: Call blocked before 2-way audio channel established!" if network_blocked else "Risk Level >= 70: High Threat Detected. Core Banking Freeze & Step-Up Verification Enforced."
+        elif overall_risk_score >= 45.0:
             risk_tier = "AMBER"
             risk_label = "HIGH RISK - Suspicious Identity & Social Engineering"
             action_code = "STRONG_WARNING_VERIFY"
-            adaptive_threshold_msg = "Risk Level 50-75: Strong Warning. Verification prompt enforced."
-        elif overall_risk_score >= 30.0:
+            adaptive_threshold_msg = "Risk Level 45-70: Strong Warning. Verification prompt enforced."
+        elif overall_risk_score >= 25.0:
             risk_tier = "AMBER"
             risk_label = "SUSPICIOUS - Potential Voice Distortion / Unverified Call"
             action_code = "PASSIVE_WARNING"
-            adaptive_threshold_msg = "Risk Level 30-50: Passive operator warning prompt."
+            adaptive_threshold_msg = "Risk Level 25-45: Passive operator warning prompt."
         else:
             risk_tier = "GREEN"
             risk_label = "SAFE - Genuine Voice & Identity Verified"
             action_code = "ALLOW"
-            adaptive_threshold_msg = "Risk Level < 30: Normal call flow active."
+            adaptive_threshold_msg = "Risk Level < 25: Normal genuine call flow active."
 
         if risk_tier == "RED_HIGH": risk_tier = "RED"
 
